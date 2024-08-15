@@ -233,6 +233,49 @@ def compute_maccs(smi, disable_logs: bool = False):
         return dm.to_fp(smi, fp_type="maccs")
 
 
+def compute_jointformer(smis, disable_logs: bool = False, batch_size: int = 16):
+    # Batch the input
+    step_size = int(np.ceil(len(smis) / batch_size))
+    batched = np.array_split(smis, step_size)
+
+    # Load the model
+    tokenizer = AutoTokenizer.from_pretrained(_CHEMBERTA_HF_ID)
+    model = AutoModelForMaskedLM.from_pretrained(_CHEMBERTA_HF_ID)
+
+    # Use the GPU if it is available
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model.to(device)
+    model.eval()
+
+    hidden_states = []
+    for batch in tqdm.tqdm(batched, desc="Batch"):
+        model_input = tokenizer(
+            batch.tolist(),
+            return_tensors="pt",
+            add_special_tokens=True,
+            truncation=True,
+            padding=True,
+            max_length=512,
+        ).to(device)
+
+        with torch.no_grad():
+            model_output = model(
+                model_input["input_ids"],
+                attention_mask=model_input["attention_mask"],
+                output_hidden_states=True,
+            )
+
+        # We use mean aggregation of the different token embeddings
+        h = model_output.hidden_states[-1]
+        h = [h_[mask].mean(0) for h_, mask in zip(h, model_input["attention_mask"])]
+        h = torch.stack(h)
+        h = h.cpu().detach().numpy()
+
+        hidden_states.append(h)
+
+    hidden_states = np.concatenate(hidden_states)
+    return hidden_states
+
 def compute_chemberta(smis, disable_logs: bool = False, batch_size: int = 16):
     # Batch the input
     step_size = int(np.ceil(len(smis) / batch_size))
