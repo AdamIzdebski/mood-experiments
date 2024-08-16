@@ -35,4 +35,4 @@ NUM_EPOCHS = 100
 """
 Path to pre-trained jointformer ckpt
 """
-PRETRAINED_JOINTFORMER_PATH = f"'/home/adamizdebski/files/results/jointformer/ckpt.pt'"
+PRETRAINED_JOINTFORMER_PATH = f"/home/adamizdebski/files/results/jointformer/ckpt.pt"
