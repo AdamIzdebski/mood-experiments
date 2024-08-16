@@ -23,8 +23,18 @@ from transformers import AutoTokenizer, AutoModelForMaskedLM
 from mood.constants import DATASET_DATA_DIR
 from mood.utils import get_mask_for_distances_or_representations
 
+from jointformer.configs.model import ModelConfig
+from jointformer.configs.tokenizer import TokenizerConfig
+
+from jointformer.utils.tokenizers.auto import AutoTokenizer
+from jointformer.models.auto import AutoModel
 
 _CHEMBERTA_HF_ID = "seyonec/PubChem10M_SMILES_BPE_450k"
+
+_JOINTFORMER_TOKENIZER_CONFIG = 'configs/smiles/'
+_JOINTFORMER_MODEL_CONFIG = 'configs/jointformer/'
+
+_JOINTFORMER_CKPT = '/home/adamizdebski/files/results/jointformer/ckpt.pt'
 
 
 def representation_iterator(
@@ -232,49 +242,29 @@ def compute_maccs(smi, disable_logs: bool = False):
     with dm.without_rdkit_log(enable=disable_logs):
         return dm.to_fp(smi, fp_type="maccs")
 
-
+@torch.no_grad()
 def compute_jointformer(smis, disable_logs: bool = False, batch_size: int = 16):
-    # Batch the input
-    step_size = int(np.ceil(len(smis) / batch_size))
-    batched = np.array_split(smis, step_size)
 
-    # Load the model
-    tokenizer = AutoTokenizer.from_pretrained(_CHEMBERTA_HF_ID)
-    model = AutoModelForMaskedLM.from_pretrained(_CHEMBERTA_HF_ID)
+    batch_size = min(batch_size, len(smis))
 
-    # Use the GPU if it is available
+    # Init Jointformer configs
+    tokenizer_config = TokenizerConfig.from_config_file(_JOINTFORMER_TOKENIZER_CONFIG)
+    model_config = ModelConfig.from_config_file(_JOINTFORMER_MODEL_CONFIG)
+
+    # Init Jointformer
+    tokenizer = AutoTokenizer.from_config(tokenizer_config)
+    model = AutoModel.from_config(model_config)
+    model.load_pretrained(_JOINTFORMER_CKPT)
+    
+    # Init encoder
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model.to(device)
-    model.eval()
-
-    hidden_states = []
-    for batch in tqdm.tqdm(batched, desc="Batch"):
-        model_input = tokenizer(
-            batch.tolist(),
-            return_tensors="pt",
-            add_special_tokens=True,
-            truncation=True,
-            padding=True,
-            max_length=512,
-        ).to(device)
-
-        with torch.no_grad():
-            model_output = model(
-                model_input["input_ids"],
-                attention_mask=model_input["attention_mask"],
-                output_hidden_states=True,
-            )
-
-        # We use mean aggregation of the different token embeddings
-        h = model_output.hidden_states[-1]
-        h = [h_[mask].mean(0) for h_, mask in zip(h, model_input["attention_mask"])]
-        h = torch.stack(h)
-        h = h.cpu().detach().numpy()
-
-        hidden_states.append(h)
-
-    hidden_states = np.concatenate(hidden_states)
+    smiles_encoder = model.to_smiles_encoder(tokenizer, batch_size, device)
+    
+    # Encode SMILES
+    hidden_states = smiles_encoder.encode(smis.tolist())
+    
     return hidden_states
+
 
 def compute_chemberta(smis, disable_logs: bool = False, batch_size: int = 16):
     # Batch the input
@@ -345,14 +335,15 @@ def load_graphormer(smis, disable_logs: bool = False, batch_size: int = 16):
 
 
 _REPR_TO_FUNC = {
-    "MACCS": compute_maccs,
-    "ECFP6": compute_ecfp6,
-    "Desc2D": compute_desc2d,
-    "WHIM": compute_whim,
-    "ChemBERTa": compute_chemberta,
-    "Graphormer": load_graphormer,
+    # "MACCS": compute_maccs,
+    # "ECFP6": compute_ecfp6,
+    # "Desc2D": compute_desc2d,
+    # "WHIM": compute_whim,
+    "ChemBERTa": compute_chemberta,  # kept for compatibility
+    # "Graphormer": load_graphormer,
+    "Jointformer": compute_jointformer,
 }
 
 MOOD_REPRESENTATIONS = list(_REPR_TO_FUNC.keys())
-BATCHED_FEATURIZERS = ["ChemBERTa", "Graphormer"]
-TEXTUAL_FEATURIZERS = ["ChemBERTa"]
+BATCHED_FEATURIZERS = ["Jointformer", "ChemBERTa", "Graphormer"]
+TEXTUAL_FEATURIZERS = ["Jointformer", "ChemBERTa"]
