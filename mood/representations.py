@@ -21,6 +21,7 @@ from rdkit.Chem import AllChem
 
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 from mood.constants import DATASET_DATA_DIR
+from mood.constants import PRETRAINED_JOINTFORMER_PATH as _JOINTFORMER_CKPT
 from mood.utils import get_mask_for_distances_or_representations
 
 from jointformer.configs.model import ModelConfig
@@ -33,8 +34,6 @@ _CHEMBERTA_HF_ID = "seyonec/PubChem10M_SMILES_BPE_450k"
 
 _JOINTFORMER_TOKENIZER_CONFIG = 'configs/smiles/'
 _JOINTFORMER_MODEL_CONFIG = 'configs/jointformer/'
-
-_JOINTFORMER_CKPT = '/home/adamizdebski/files/results/jointformer/ckpt.pt'
 
 
 def representation_iterator(
