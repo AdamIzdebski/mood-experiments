@@ -28,4 +28,5 @@ DEFAULT_PREPROCESSING = {
     "WHIM": partial(standardize_smiles, for_text_based_model=False),
     "ChemBERTa": partial(standardize_smiles, for_text_based_model=True),
     "Graphormer": partial(standardize_smiles, for_text_based_model=False),
+    "Jointformer": partial(standardize_smiles, for_text_based_model=True),
 }
