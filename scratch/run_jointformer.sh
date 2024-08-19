@@ -1,11 +1,11 @@
 #bin/bash
 
+mood scripts precompute representation virtual_screening Jointformer --n-jobs 4 --verbose
+mood scripts precompute representation optimization Jointformer --n-jobs 4 --verbose
+
+mood scripts precompute distances --dataset Lipophilicity --representation Jointformer
+
 mood scripts compare performance \
-  --base-save-dir /home/adamizdebski/files/results/mood-experiments/ \
-  --overwrite \
-  --n-seeds 2 \
-  --n-trials 2 \
-  --n-startup-trials 2 \
-  MLP \
+  MLP RF GP\
   Jointformer \
   Lipophilicity
