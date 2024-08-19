@@ -24,11 +24,6 @@ from mood.constants import DATASET_DATA_DIR
 from mood.constants import PRETRAINED_JOINTFORMER_PATH as _JOINTFORMER_CKPT
 from mood.utils import get_mask_for_distances_or_representations
 
-from jointformer.configs.model import ModelConfig
-from jointformer.configs.tokenizer import TokenizerConfig
-
-from jointformer.utils.tokenizers.auto import AutoTokenizer
-from jointformer.models.auto import AutoModel
 
 _CHEMBERTA_HF_ID = "seyonec/PubChem10M_SMILES_BPE_450k"
 
@@ -243,6 +238,9 @@ def compute_maccs(smi, disable_logs: bool = False):
 
 @torch.no_grad()
 def compute_jointformer(smis, disable_logs: bool = False, batch_size: int = 16):
+
+    from jointformer.utils.tokenizers.auto import AutoTokenizer
+    from jointformer.models.auto import AutoModel
 
     batch_size = min(batch_size, len(smis))
 

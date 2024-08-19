@@ -178,45 +178,48 @@ def cli(
             "type": ["performance", "calibration"],
         }
     ).to_csv(out_path, index=False)
+    logger.info(f"IID/OOD gap data saved!")
 
-    # Compute the performance over distance
-    df = pd.DataFrame()
-    for distance, mask in tqdm(bin_with_overlap(dist_test)):
-        target = y_true[mask]
-        preds = y_pred[mask]
-        uncertainty = y_uncertainty[mask]
+    # # Compute the performance over distance
+    # df = pd.DataFrame()
+    # for distance, mask in tqdm(bin_with_overlap(dist_test)):
+    #     target = y_true[mask]
+    #     preds = y_pred[mask]
+    #     uncertainty = y_uncertainty[mask]
 
-        n_samples = len(mask)
-        if n_samples < 25 or len(np.unique(target)) == 1:
-            continue
+    #     n_samples = len(mask)
+    #     if n_samples < 25 or len(np.unique(target)) == 1:
+    #         continue
 
-        perf_mu, perf_std = compute_bootstrapped_metric(
-            targets=target, predictions=preds, metric=perf_metric, n_jobs=-1
-        )
+    #     perf_mu, perf_std = compute_bootstrapped_metric(
+    #         targets=target, predictions=preds, metric=perf_metric, n_jobs=-1
+    #     )
 
-        cali_mu, cali_std = compute_bootstrapped_metric(
-            targets=target, predictions=preds, uncertainties=uncertainty, metric=cali_metric, n_jobs=-1
-        )
+    #     cali_mu, cali_std = compute_bootstrapped_metric(
+    #         targets=target, predictions=preds, uncertainties=uncertainty, metric=cali_metric, n_jobs=-1
+    #     )
 
-        df_ = pd.DataFrame(
-            {
-                "dataset": dataset,
-                "algorithm": baseline_algorithm,
-                "representation": representation,
-                "distance": distance,
-                "score_mu": [perf_mu, cali_mu],
-                "score_std": [perf_std, cali_std],
-                "type": ["performance", "calibration"],
-                "metric": [perf_metric.name, cali_metric.name],
-                "n_samples": n_samples,
-            }
-        )
-        df = pd.concat((df, df_), ignore_index=True)
+    #     df_ = pd.DataFrame(
+    #         {
+    #             "dataset": dataset,
+    #             "algorithm": baseline_algorithm,
+    #             "representation": representation,
+    #             "distance": distance,
+    #             "score_mu": [perf_mu, cali_mu],
+    #             "score_std": [perf_std, cali_std],
+    #             "type": ["performance", "calibration"],
+    #             "metric": [perf_metric.name, cali_metric.name],
+    #             "n_samples": n_samples,
+    #         }
+    #     )
+    #     logger.info("Attempting to concatenate!")
+    #     df = pd.concat((df, df_), ignore_index=True)
+    #     logger.info("Concatenated!")
 
-    file_name = f"perf_over_distance_{dataset}_{baseline_algorithm}_{representation}.csv"
-    out_path = dm.fs.join(out_dir, file_name)
-    if dm.fs.exists(out_path) and not overwrite:
-        raise RuntimeError(f"{out_path} already exists!")
+    # file_name = f"perf_over_distance_{dataset}_{baseline_algorithm}_{representation}.csv"
+    # out_path = dm.fs.join(out_dir, file_name)
+    # if dm.fs.exists(out_path) and not overwrite:
+    #     raise RuntimeError(f"{out_path} already exists!")
 
-    logger.info(f"Saving the performance over distance data to {out_path}")
-    df.to_csv(out_path, index=False)
+    # logger.info(f"Saving the performance over distance data to {out_path}")
+    # df.to_csv(out_path, index=False)
