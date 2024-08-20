@@ -178,17 +178,17 @@ TDC_TO_MOOD = {
 
 # Ordered by size
 MOOD_DATASETS = [
-    # "DILI",
-    # "HIA",
-    # "hERG",
-    # "HalfLife",
-    # "Caco-2",
-    # "Clearance",
-    # "Pgp",
-    # "PPBR",
-    # "BBB",
-    "Lipophilicity" #,
-#     "CYP2C9",
+    "DILI",
+    "HIA",
+    "hERG",
+    "HalfLife",
+    "Caco-2",
+    "Clearance",
+    "Pgp",
+    "PPBR",
+    "BBB",
+    "Lipophilicity",
+    "CYP2C9",
 ]
 
 MOOD_TO_TDC = {v: k for k, v in TDC_TO_MOOD.items()}

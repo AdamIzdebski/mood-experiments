@@ -1,7 +1,8 @@
 import datamol as dm
 
 
-ROOT_DIR = '/home/adamizdebski/files/mood-experiments'
+ROOT_DIR = '/lustre/groups/aih/jointformer/results/mood-experiments'
+
 """
 Where results and data are saved to
 """
@@ -35,4 +36,8 @@ NUM_EPOCHS = 100
 """
 Path to pre-trained jointformer ckpt
 """
-PRETRAINED_JOINTFORMER_PATH = f"/home/adamizdebski/files/results/jointformer/ckpt.pt"
+PRETRAINED_DIR = f"{ROOT_DIR}/pretrained/jointformer/"
+PRETRAINED_JOINTFORMER_PATH = f"{PRETRAINED_DIR}/ckpt.pt"
+PRETRAINED_JOINTFORMER_MODEL_CONFIG = f"{PRETRAINED_DIR}/model_config"
+PRETRAINED_JOINTFORMER_TOKENIZER_CONFIG = f"{PRETRAINED_DIR}/tokenizer_config"
+PRETRAINED_JOINTFORMER_VOCAB_PATH = "{PRETRAINED_DIR}/vocabulary/vocab.txt"

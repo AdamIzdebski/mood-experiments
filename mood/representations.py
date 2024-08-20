@@ -21,14 +21,15 @@ from rdkit.Chem import AllChem
 
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 from mood.constants import DATASET_DATA_DIR
-from mood.constants import PRETRAINED_JOINTFORMER_PATH as _JOINTFORMER_CKPT
 from mood.utils import get_mask_for_distances_or_representations
 
 
 _CHEMBERTA_HF_ID = "seyonec/PubChem10M_SMILES_BPE_450k"
 
-_JOINTFORMER_TOKENIZER_CONFIG = 'configs/smiles/'
-_JOINTFORMER_MODEL_CONFIG = 'configs/jointformer/'
+from mood.constants import PRETRAINED_JOINTFORMER_PATH as _JOINTFORMER_CKPT
+from mood.constants import PRETRAINED_JOINTFORMER_MODEL_CONFIG as _JOINTFORMER_MODEL_CONFIG
+from mood.constants import PRETRAINED_JOINTFORMER_TOKENIZER_CONFIG as _JOINTFORMER_TOKENIZER_CONFIG
+from mood.constants import PRETRAINED_JOINTFORMER_VOCAB_PATH as _JOINTFORMER_VOCAB_PATH
 
 
 def representation_iterator(
@@ -246,6 +247,7 @@ def compute_jointformer(smis, disable_logs: bool = False, batch_size: int = 16):
 
     # Init Jointformer configs
     tokenizer_config = TokenizerConfig.from_config_file(_JOINTFORMER_TOKENIZER_CONFIG)
+    tokenizer_config.path_to_vocabulary = _JOINTFORMER_VOCAB_PATH
     model_config = ModelConfig.from_config_file(_JOINTFORMER_MODEL_CONFIG)
 
     # Init Jointformer
@@ -332,12 +334,12 @@ def load_graphormer(smis, disable_logs: bool = False, batch_size: int = 16):
 
 
 _REPR_TO_FUNC = {
-    # "MACCS": compute_maccs,
-    # "ECFP6": compute_ecfp6,
-    # "Desc2D": compute_desc2d,
-    # "WHIM": compute_whim,
-    "ChemBERTa": compute_chemberta,  # kept for compatibility
-    # "Graphormer": load_graphormer,
+    "MACCS": compute_maccs,
+    "ECFP6": compute_ecfp6,
+    "Desc2D": compute_desc2d,
+    "WHIM": compute_whim,
+    "ChemBERTa": compute_chemberta,
+    "Graphormer": load_graphormer,
     "Jointformer": compute_jointformer,
 }
 

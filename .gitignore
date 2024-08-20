@@ -143,3 +143,6 @@ notebooks/*.csv
 profile/
 argo/
 
+# SLURM logs and errors
+*.log
+*.err
