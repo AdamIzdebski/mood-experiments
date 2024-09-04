@@ -31,6 +31,9 @@ from mood.constants import PRETRAINED_JOINTFORMER_MODEL_CONFIG as _JOINTFORMER_M
 from mood.constants import PRETRAINED_JOINTFORMER_TOKENIZER_CONFIG as _JOINTFORMER_TOKENIZER_CONFIG
 from mood.constants import PRETRAINED_JOINTFORMER_VOCAB_PATH as _JOINTFORMER_VOCAB_PATH
 
+from mood.constants import PRETRAINED_UNIMOL_PATH as _UNIMOL_CKPT
+from mood.constants import PRETRAINED_UNIMOL_MODEL_CONFIG as _UNIMOL_MODEL_CONFIG
+
 
 def representation_iterator(
     smiles,
@@ -264,6 +267,29 @@ def compute_jointformer(smis, disable_logs: bool = False, batch_size: int = 16):
     
     return hidden_states
 
+@torch.no_grad()
+def compute_unimol(smis, disable_logs: bool = False, batch_size: int = 16):
+
+    from jointformer.configs.model import ModelConfig
+    from jointformer.models.auto import AutoModel
+
+    batch_size = min(batch_size, len(smis))
+
+    # Init Jointformer configs
+    model_config = ModelConfig.from_config_file(_UNIMOL_MODEL_CONFIG)
+
+    # Init Jointformer
+    model = AutoModel.from_config(model_config)
+    model.load_pretrained(_UNIMOL_CKPT)
+    
+    # Init encoder
+    smiles_encoder = model.to_smiles_encoder(None, batch_size, None)
+    
+    # Encode SMILES
+    hidden_states = smiles_encoder.encode(smis.tolist())
+    
+    return hidden_states
+
 
 def compute_chemberta(smis, disable_logs: bool = False, batch_size: int = 16):
     # Batch the input
@@ -341,8 +367,9 @@ _REPR_TO_FUNC = {
     "ChemBERTa": compute_chemberta,
     "Graphormer": load_graphormer,
     "Jointformer": compute_jointformer,
+    "UniMol": compute_unimol,
 }
 
 MOOD_REPRESENTATIONS = list(_REPR_TO_FUNC.keys())
-BATCHED_FEATURIZERS = ["Jointformer", "ChemBERTa", "Graphormer"]
-TEXTUAL_FEATURIZERS = ["Jointformer", "ChemBERTa"]
+BATCHED_FEATURIZERS = ["Jointformer", "ChemBERTa", "Graphormer", "UniMol"]
+TEXTUAL_FEATURIZERS = ["Jointformer", "ChemBERTa", "UniMol"]

@@ -11,7 +11,7 @@ from tdc.metadata import dataset_names
 from torch.utils.data import default_collate
 
 from mood.chemistry import compute_generic_scaffold
-from mood.constants import CACHE_DIR
+from mood.constants import DATA_DIR
 
 
 class SimpleMolecularDataset(torch.utils.data.Dataset):
@@ -113,7 +113,7 @@ def load_data_from_tdc(name: str, disable_logs: bool = False):
     if name in MOOD_TO_TDC:
         name = MOOD_TO_TDC[name]
 
-    path = dm.fs.join(CACHE_DIR, "TDC")
+    path = dm.fs.join(DATA_DIR, "TDC")
 
     # Load the dataset
     if name.lower() in dataset_names["ADME"]:

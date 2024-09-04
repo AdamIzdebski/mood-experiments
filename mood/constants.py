@@ -6,6 +6,7 @@ ROOT_DIR = '/lustre/groups/aih/jointformer/results/mood-experiments'
 """
 Where results and data are saved to
 """
+DATA_DIR = f"{ROOT_DIR}/data/"
 CACHE_DIR = dm.fs.get_cache_dir("MOOD")
 
 """
@@ -36,8 +37,12 @@ NUM_EPOCHS = 100
 """
 Path to pre-trained jointformer ckpt
 """
-PRETRAINED_DIR = f"{ROOT_DIR}/pretrained/jointformer/"
-PRETRAINED_JOINTFORMER_PATH = f"{PRETRAINED_DIR}/ckpt.pt"
-PRETRAINED_JOINTFORMER_MODEL_CONFIG = f"{PRETRAINED_DIR}/model_config"
-PRETRAINED_JOINTFORMER_TOKENIZER_CONFIG = f"{PRETRAINED_DIR}/tokenizer_config"
-PRETRAINED_JOINTFORMER_VOCAB_PATH = "{PRETRAINED_DIR}/vocabulary/vocab.txt"
+PRETRAINED_JOINTFORMER_DIR = f"{ROOT_DIR}/pretrained/jointformer/"
+PRETRAINED_JOINTFORMER_PATH = f"{PRETRAINED_JOINTFORMER_DIR}/ckpt.pt"
+PRETRAINED_JOINTFORMER_MODEL_CONFIG = f"{PRETRAINED_JOINTFORMER_DIR}/model_config"
+PRETRAINED_JOINTFORMER_TOKENIZER_CONFIG = f"{PRETRAINED_JOINTFORMER_DIR}/tokenizer_config"
+PRETRAINED_JOINTFORMER_VOCAB_PATH = f"{PRETRAINED_JOINTFORMER_DIR}/vocabulary/vocab.txt"
+
+PRETRAINED_UNIMOL_DIR = f"{ROOT_DIR}/pretrained/unimol/"
+PRETRAINED_UNIMOL_PATH = f"{PRETRAINED_UNIMOL_DIR}/ckpt.pt"
+PRETRAINED_UNIMOL_MODEL_CONFIG = f"{PRETRAINED_UNIMOL_DIR}/model_config"
