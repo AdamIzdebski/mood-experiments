@@ -11,11 +11,14 @@ from mood.preprocessing import DEFAULT_PREPROCESSING
 
 
 def save(distances, compounds, molecule_set, dataset, representation, overwrite):
-    out_path = dm.fs.join(
-        DOWNSTREAM_APPS_DATA_DIR, "distances", molecule_set, dataset, f"{representation}.parquet"
-    )
+    out_dir = dm.fs.join(DOWNSTREAM_APPS_DATA_DIR, "distances", molecule_set, dataset)
+    out_path = dm.fs.join(out_dir, f"{representation}.parquet")
+
+    
     if dm.fs.exists(out_path) and not overwrite:
         raise RuntimeError(f"{out_path} already exists!")
+    else:
+        dm.fs.mkdir(out_dir, exist_ok=True)
 
     df = pd.DataFrame({"unique_id": compounds, "distance": distances})
     df.to_parquet(out_path)

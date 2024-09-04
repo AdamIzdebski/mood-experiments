@@ -7,12 +7,10 @@
 
 #SBATCH -p gpu_p
 #SBATCH --qos gpu_normal
-
-#SBATCH --nodes=1                                           
-#SBATCH --ntasks-per-node=1                                  
+                                
 #SBATCH --cpus-per-task=12                                   
-#SBATCH --mem=8G                                            
-#SBATCH --time=06:00:00                                    
+#SBATCH --mem=24G                                            
+#SBATCH --time=02:30:00                                    
 
 #SBATCH --mail-type=begin                                   
 #SBATCH --mail-type=end                                     
@@ -21,9 +19,14 @@
 
 #SBATCH --nice=1000                            
 
+source $HOME/.bashrc
+
+conda deactivate
+conda activate /home/aih/adam.izdebski/miniconda3/envs/mood-jointformer
+
+
 downstream_tasks=("virtual_screening" "optimization")
 representations=("Jointformer")
-
 
 tasks=()
 for downstream_task in "${downstream_tasks[@]}"; do
@@ -37,10 +40,4 @@ downstream_task=$(echo $task | cut -d',' -f1)
 representation=$(echo $task | cut -d',' -f2)
 
 echo "Precomputing $representation representations for $downstream_task..."
-
-source $HOME/.bashrc
-
-conda deactivate
-conda activate /home/aih/adam.izdebski/tools/apps/mamba/envs/mood-jointformer
-
-mood scripts precompute representation $downstream_task $representation --n-jobs $SLURM_CPUS_PER_TASK --verbose
+mood scripts precompute representation $downstream_task $representation --n-jobs $SLURM_CPUS_PER_TASK --verbose --override

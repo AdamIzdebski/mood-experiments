@@ -2,11 +2,11 @@ import datamol as dm
 
 
 ROOT_DIR = '/lustre/groups/aih/jointformer/results/mood-experiments'
+DATA_DIR = "/lustre/groups/aih/jointformer/data/data"
 
 """
 Where results and data are saved to
 """
-DATA_DIR = f"{ROOT_DIR}/data/"
 CACHE_DIR = dm.fs.get_cache_dir("MOOD")
 
 """
@@ -37,7 +37,8 @@ NUM_EPOCHS = 100
 """
 Path to pre-trained jointformer ckpt
 """
-PRETRAINED_JOINTFORMER_DIR = f"{ROOT_DIR}/pretrained/jointformer/"
+JOINTFORMER = 'jointformer-separate-task-token'
+PRETRAINED_JOINTFORMER_DIR = f"{ROOT_DIR}/pretrained/{JOINTFORMER}/"
 PRETRAINED_JOINTFORMER_PATH = f"{PRETRAINED_JOINTFORMER_DIR}/ckpt.pt"
 PRETRAINED_JOINTFORMER_MODEL_CONFIG = f"{PRETRAINED_JOINTFORMER_DIR}/model_config"
 PRETRAINED_JOINTFORMER_TOKENIZER_CONFIG = f"{PRETRAINED_JOINTFORMER_DIR}/tokenizer_config"

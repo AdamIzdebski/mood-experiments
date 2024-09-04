@@ -243,6 +243,8 @@ def compute_maccs(smi, disable_logs: bool = False):
 @torch.no_grad()
 def compute_jointformer(smis, disable_logs: bool = False, batch_size: int = 16):
 
+    from jointformer.configs.tokenizer import TokenizerConfig
+    from jointformer.configs.model import ModelConfig
     from jointformer.utils.tokenizers.auto import AutoTokenizer
     from jointformer.models.auto import AutoModel
 

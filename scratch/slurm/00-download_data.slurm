@@ -1,18 +1,15 @@
 #!/bin/bash
 
-#SBATCH --job-name=precompute_distances
-#SBATCH --array=0-65                 
-#SBATCH --output=precompute_distances_%a.log  
-#SBATCH --error=precompute_distances_%a.err   
+#SBATCH --job-name=download_data     
+#SBATCH --output=download_data.log  
+#SBATCH --error=download_data.err   
 
-#SBATCH -p gpu_p
-#SBATCH --qos gpu_normal
-
-#SBATCH --nodes=1                                           
-#SBATCH --ntasks-per-node=1                                  
+#SBATCH -p cpu_p
+#SBATCH --qos cpu_normal
+                             
 #SBATCH --cpus-per-task=16                                   
 #SBATCH --mem=8G                                            
-#SBATCH --time=12:00:00                                    
+#SBATCH --time=01:00:00                                    
 
 #SBATCH --mail-type=begin                                   
 #SBATCH --mail-type=end                                     
@@ -29,7 +26,6 @@ conda deactivate
 conda activate /home/aih/adam.izdebski/miniconda3/envs/mood-experiments
 
 for dataset in "${mood_datasets[@]}"; do
-    srun python3 scratch/slurm/download_data.py --dataset $dataset
+    echo "Downloading $dataset data..."
+    srun python3 scripts/download_data.py --dataset $dataset
 done
-
-
