@@ -28,6 +28,10 @@ DEFAULT_PREPROCESSING = {
     "WHIM": partial(standardize_smiles, for_text_based_model=False),
     "ChemBERTa": partial(standardize_smiles, for_text_based_model=True),
     "Graphormer": partial(standardize_smiles, for_text_based_model=False),
-    "Jointformer": partial(standardize_smiles, for_text_based_model=True),
+    "MolGPT"    : partial(standardize_smiles, for_text_based_model=True),
     "UniMol"    : partial(standardize_smiles, for_text_based_model=True),
+    "Moler": partial(standardize_smiles, for_text_based_model=True),
+    "RegressionTransformer": partial(standardize_smiles, for_text_based_model=True),
+    "LOLBO": partial(standardize_smiles, for_text_based_model=True),
+    "Jointformer": partial(standardize_smiles, for_text_based_model=True)
 }
