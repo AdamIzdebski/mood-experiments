@@ -7,6 +7,7 @@ from scripts.precompute_distances import cli as precompute_distances_cmd
 from scripts.visualize_shift import cli as visualize_shift_cmd
 from scripts.visualize_splits import cli as visualize_splits_cmd
 from scripts.visualize_perf_over_distance import cli as perf_over_distance_cmd
+from scripts.compare_ood_performance import cli as iid_ood_gap_fixed_ood_distance_cmd
 
 
 compare_app = typer.Typer(help="Various CLIs that involve comparing two things")
@@ -18,6 +19,10 @@ compare_app.command(
 compare_app.command(
     name="performance", help="Compare how the model performs on compounds in the IID and OOD range"
 )(iid_ood_gap_cmd)
+
+compare_app.command(
+    name="ood_performance", help="Compare how the model performs on compounds in the IID and OOD range"
+)(iid_ood_gap_fixed_ood_distance_cmd)
 
 compare_app.command(
     name="splits",
