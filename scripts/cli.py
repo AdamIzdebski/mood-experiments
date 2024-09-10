@@ -21,7 +21,7 @@ compare_app.command(
 )(iid_ood_gap_cmd)
 
 compare_app.command(
-    name="ood_performance", help="Compare how the model performs on compounds in the IID and OOD range"
+    name="performance_ood", help="Compare how the model performs on compounds in the IID and OOD range"
 )(iid_ood_gap_fixed_ood_distance_cmd)
 
 compare_app.command(
