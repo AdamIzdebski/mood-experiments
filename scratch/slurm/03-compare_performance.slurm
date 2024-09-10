@@ -10,7 +10,7 @@
                                 
 #SBATCH --cpus-per-task=12                                   
 #SBATCH --mem=24G                                            
-#SBATCH --time=24:00:00                                    
+#SBATCH --time=48:00:00                                    
 
 #SBATCH --mail-type=begin                                   
 #SBATCH --mail-type=end                                     
@@ -21,7 +21,7 @@
 
 
 datasets=("DILI" "HIA" "hERG" "HalfLife" "Caco-2" "Clearance" "Pgp" "PPBR" "BBB" "Lipophilicity" "CYP2C9")
-representations=("UniMol")
+representations=("MolGPT")
 baselines=("MLP" "RF" "GP")
 
 tasks=()
@@ -44,6 +44,6 @@ echo "Comparing performance of $baseline for $representation representations on 
 source $HOME/.bashrc
 
 conda deactivate
-conda activate /home/aih/adam.izdebski/miniconda3/envs/mood-experiments
+conda activate /home/aih/adam.izdebski/miniconda3/envs/mood-jointformer
 
 mood scripts compare performance $baseline $representation $dataset

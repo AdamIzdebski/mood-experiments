@@ -22,11 +22,11 @@
 source $HOME/.bashrc
 
 conda deactivate
-conda activate /home/aih/adam.izdebski/miniconda3/envs/mood-experiments
+conda activate /home/aih/adam.izdebski/miniconda3/envs/mood-jointformer
 
 
 datasets=("DILI" "HIA" "hERG" "HalfLife" "Caco-2" "Clearance" "Pgp" "PPBR" "BBB" "Lipophilicity" "CYP2C9")
-representations=("UniMol")
+representations=("MolGPT")
 
 tasks=()
 for dataset in "${datasets[@]}"; do
@@ -41,6 +41,6 @@ dataset=$(echo $task | cut -d',' -f1)
 representation=$(echo $task | cut -d',' -f2)
 
 echo "Precomputing $dataset $representation distances..."
-mood scripts precompute distances --dataset $dataset --representation $representation
+mood scripts precompute distances --dataset $dataset --representation $representation --overwrite
 
 echo "Precomputing $dataset $representation distances finished!"

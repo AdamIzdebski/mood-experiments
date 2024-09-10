@@ -8,7 +8,7 @@
 #SBATCH -p gpu_p
 #SBATCH --qos gpu_normal
                                 
-#SBATCH --cpus-per-task=12                                   
+#SBATCH --cpus-per-task=8                                   
 #SBATCH --mem=24G                                            
 #SBATCH --time=02:30:00                                    
 
@@ -22,11 +22,11 @@
 source $HOME/.bashrc
 
 conda deactivate
-conda activate /home/aih/adam.izdebski/miniconda3/envs/mood-experiments
+conda activate /home/aih/adam.izdebski/miniconda3/envs/mood-jointformer
 
 
 downstream_tasks=("virtual_screening" "optimization")
-representations=("UniMol")
+representations=("MolGPT")
 
 tasks=()
 for downstream_task in "${downstream_tasks[@]}"; do
@@ -40,4 +40,4 @@ downstream_task=$(echo $task | cut -d',' -f1)
 representation=$(echo $task | cut -d',' -f2)
 
 echo "Precomputing $representation representations for $downstream_task..."
-mood scripts precompute representation $downstream_task $representation --n-jobs $SLURM_CPUS_PER_TASK --verbose
+mood scripts precompute representation $downstream_task $representation --n-jobs $SLURM_CPUS_PER_TASK --verbose --override
