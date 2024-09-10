@@ -146,3 +146,5 @@ argo/
 # SLURM logs and errors
 *.log
 *.err
+*.csv
+test*.ipynb
